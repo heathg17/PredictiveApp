@@ -1,0 +1,242 @@
+====================================================================================================
+NEURAL NETWORK IMPROVEMENT COMPARISON TEST
+====================================================================================================
+
+Loading dataset...
+Loaded 46 formulations from ../public/Concentrations.csv
+Loaded 88 spectral measurements from ../public/Spectra.csv
+Found 31 wavelength columns
+Warning: No concentration match for BiVaO5H (tried: BiVaO5, BiVaO5)
+Warning: No concentration match for BiVaO5 (tried: BiVaO5, BiVaO5)
+Warning: No concentration match for BiVa10 (tried: BiVa10, BiVa10)
+Warning: No concentration match for BiVa20 (tried: BiVa20, BiVa20)
+✓ Created 84 samples
+  8μm samples: 41
+  12μm samples: 43
+✓ Dataset loaded: 84 samples
+  Inputs: 5 features
+  Outputs: 36 features (31 spectral + 5 CIELAB)
+
+Splitting dataset (60/20/20)...
+  Training:   50 samples
+  Validation: 17 samples
+  Test:       17 samples
+
+
+====================================================================================================
+MODEL 1: BASELINE (Current Enhanced Model)
+====================================================================================================
+Training Enhanced Neural Network (4×64) on cpu
+Architecture: 5 → 64 → 64 → 64 → 64 → [31 + 5] outputs
+Training samples: 50, Validation samples: 17
+Total parameters: 18,724
+Epoch 0/2000 | Train: 2.298017 | Val: 1.673883 | Spectral: 1.091885 | CIELAB: 1.163995
+Epoch 100/2000 | Train: 0.369965 | Val: 0.263488 | Spectral: 0.186114 | CIELAB: 0.154748
+Epoch 200/2000 | Train: 0.275182 | Val: 0.249973 | Spectral: 0.166211 | CIELAB: 0.167525
+Epoch 300/2000 | Train: 0.235557 | Val: 0.218194 | Spectral: 0.151563 | CIELAB: 0.133262
+Epoch 400/2000 | Train: 0.190287 | Val: 0.225967 | Spectral: 0.158014 | CIELAB: 0.135906
+Epoch 500/2000 | Train: 0.136904 | Val: 0.223469 | Spectral: 0.156523 | CIELAB: 0.133892
+Epoch 600/2000 | Train: 0.190013 | Val: 0.174994 | Spectral: 0.119886 | CIELAB: 0.110217
+Epoch 700/2000 | Train: 0.175471 | Val: 0.204244 | Spectral: 0.137857 | CIELAB: 0.132773
+Epoch 800/2000 | Train: 0.211242 | Val: 0.193256 | Spectral: 0.133577 | CIELAB: 0.119357
+Early stopping at epoch 872 (best val loss: 0.153335)
+Training complete!
+
+Evaluating Baseline...
+  Spectral - MAE: 0.026159, RMSE: 0.035818, R²: 0.983875
+  CIELAB   - MAE: 0.366388, RMSE: 0.495033, R²: -2.237431
+
+====================================================================================================
+MODEL 2: PHYSICS FEATURES ONLY
+====================================================================================================
+================================================================================
+IMPROVED PHYSICS-INFORMED NEURAL NETWORK
+================================================================================
+Device: cpu
+Physics Features: Enabled
+Data Augmentation: Disabled
+
+Adding physics-informed features...
+  Original features: 5
+  Enhanced features: 33
+  Feature names: GXT, BiVaO4, PG, PearlB, Thickness, Total_Conc, NonFluor_Conc, Ratio_GXT, Ratio_BiVaO4, Ratio_PG...
+
+Normalizing inputs (z-score)...
+Normalizing outputs (separate for spectral and CIELAB)...
+  Spectral mean: 0.8259, std: 0.1231
+  CIELAB mean: 0.5461, std: 0.0763
+
+Creating neural network...
+  Input size: 33
+  Hidden size: 64
+  Architecture: 33 → 64×4 → [31 + 5]
+  Total parameters: 20,516
+
+Training for up to 2000 epochs...
+  Training samples: 50
+  Validation samples: 17
+  Batch size: 16
+  Early stopping patience: 300
+================================================================================
+Epoch    0 | Train: 1.984404 | Val: 1.799988 | Spectral: 1.117902 | CIELAB: 1.364172 | LR: 0.001000
+Epoch  100 | Train: 0.234909 | Val: 0.231198 | Spectral: 0.171048 | CIELAB: 0.120300 | LR: 0.001000
+Epoch  200 | Train: 0.155340 | Val: 0.180897 | Spectral: 0.120918 | CIELAB: 0.119958 | LR: 0.001000
+Epoch  300 | Train: 0.173632 | Val: 0.165109 | Spectral: 0.111508 | CIELAB: 0.107202 | LR: 0.000500
+Epoch  400 | Train: 0.147307 | Val: 0.190172 | Spectral: 0.121627 | CIELAB: 0.137090 | LR: 0.000250
+
+Early stopping at epoch 487
+Best validation loss: 0.133877
+================================================================================
+Training complete!
+Final validation loss: 0.164397
+Best validation loss: 0.133877
+
+Evaluating Physics Features...
+  Spectral - MAE: 0.022364, RMSE: 0.030801, R²: 0.988076
+  CIELAB   - MAE: 0.366387, RMSE: 0.495028, R²: -2.237367
+
+====================================================================================================
+MODEL 3: DATA AUGMENTATION ONLY
+====================================================================================================
+================================================================================
+IMPROVED PHYSICS-INFORMED NEURAL NETWORK
+================================================================================
+Device: cpu
+Physics Features: Disabled
+Data Augmentation: Enabled
+
+Applying data augmentation (factor=2)...
+  Original training samples: 50
+  Augmented training samples: 150
+
+Normalizing inputs (z-score)...
+Normalizing outputs (separate for spectral and CIELAB)...
+  Spectral mean: 0.8260, std: 0.1231
+  CIELAB mean: 0.5461, std: 0.0763
+
+Creating neural network...
+  Input size: 5
+  Hidden size: 64
+  Architecture: 5 → 64×4 → [31 + 5]
+  Total parameters: 18,724
+
+Training for up to 2000 epochs...
+  Training samples: 150
+  Validation samples: 17
+  Batch size: 16
+  Early stopping patience: 300
+================================================================================
+Epoch    0 | Train: 2.085728 | Val: 1.678957 | Spectral: 1.130876 | CIELAB: 1.096162 | LR: 0.001000
+Epoch  100 | Train: 0.171519 | Val: 0.180360 | Spectral: 0.124354 | CIELAB: 0.112012 | LR: 0.001000
+Epoch  200 | Train: 0.131983 | Val: 0.159351 | Spectral: 0.115267 | CIELAB: 0.088168 | LR: 0.001000
+Epoch  300 | Train: 0.113943 | Val: 0.152848 | Spectral: 0.103063 | CIELAB: 0.099569 | LR: 0.001000
+Epoch  400 | Train: 0.100513 | Val: 0.151468 | Spectral: 0.108006 | CIELAB: 0.086925 | LR: 0.000500
+Epoch  500 | Train: 0.077886 | Val: 0.155068 | Spectral: 0.111495 | CIELAB: 0.087146 | LR: 0.000250
+
+Early stopping at epoch 593
+Best validation loss: 0.136767
+================================================================================
+Training complete!
+Final validation loss: 0.163757
+Best validation loss: 0.136767
+
+Evaluating Data Augmentation...
+  Spectral - MAE: 0.023255, RMSE: 0.030156, R²: 0.988571
+  CIELAB   - MAE: 0.366372, RMSE: 0.495021, R²: -2.237274
+
+====================================================================================================
+MODEL 4: FULL IMPROVEMENTS (Physics + Augmentation)
+====================================================================================================
+================================================================================
+IMPROVED PHYSICS-INFORMED NEURAL NETWORK
+================================================================================
+Device: cpu
+Physics Features: Enabled
+Data Augmentation: Enabled
+
+Adding physics-informed features...
+  Original features: 5
+  Enhanced features: 33
+  Feature names: GXT, BiVaO4, PG, PearlB, Thickness, Total_Conc, NonFluor_Conc, Ratio_GXT, Ratio_BiVaO4, Ratio_PG...
+
+Applying data augmentation (factor=2)...
+  Original training samples: 50
+  Augmented training samples: 150
+
+Normalizing inputs (z-score)...
+Normalizing outputs (separate for spectral and CIELAB)...
+  Spectral mean: 0.8259, std: 0.1231
+  CIELAB mean: 0.5461, std: 0.0763
+
+Creating neural network...
+  Input size: 33
+  Hidden size: 64
+  Architecture: 33 → 64×4 → [31 + 5]
+  Total parameters: 20,516
+
+Training for up to 2000 epochs...
+  Training samples: 150
+  Validation samples: 17
+  Batch size: 16
+  Early stopping patience: 300
+================================================================================
+Epoch    0 | Train: 1.772880 | Val: 1.540710 | Spectral: 1.080417 | CIELAB: 0.920586 | LR: 0.001000
+Epoch  100 | Train: 0.146362 | Val: 0.157874 | Spectral: 0.108099 | CIELAB: 0.099550 | LR: 0.001000
+Epoch  200 | Train: 0.094469 | Val: 0.162577 | Spectral: 0.104213 | CIELAB: 0.116728 | LR: 0.001000
+Epoch  300 | Train: 0.072764 | Val: 0.129111 | Spectral: 0.092056 | CIELAB: 0.074110 | LR: 0.000500
+Epoch  400 | Train: 0.066176 | Val: 0.128389 | Spectral: 0.088148 | CIELAB: 0.080481 | LR: 0.000250
+Epoch  500 | Train: 0.046180 | Val: 0.132880 | Spectral: 0.092906 | CIELAB: 0.079947 | LR: 0.000125
+
+Early stopping at epoch 580
+Best validation loss: 0.111254
+================================================================================
+Training complete!
+Final validation loss: 0.132913
+Best validation loss: 0.111254
+
+Evaluating Full Improvements...
+  Spectral - MAE: 0.019580, RMSE: 0.025975, R²: 0.991520
+  CIELAB   - MAE: 0.366374, RMSE: 0.495021, R²: -2.237274
+
+====================================================================================================
+COMPARISON SUMMARY
+====================================================================================================
+
+Model                     Spectral MAE   CIELAB MAE     Val Loss     Time (s)
+----------------------------------------------------------------------------------------------------
+Baseline                      0.026159     0.366388     0.153335          6.5
+Physics Features              0.022364     0.366387     0.133877          3.8
+Data Augmentation             0.023255     0.366372     0.136767         10.9
+Full Improvements             0.019580     0.366374     0.111254         11.1
+
+====================================================================================================
+IMPROVEMENT PERCENTAGES (vs Baseline)
+====================================================================================================
+
+Model                        Spectral MAE      CIELAB MAE
+----------------------------------------------------------------------------------------------------
+Physics Features                    14.5%            0.0%
+Data Augmentation                   11.1%            0.0%
+Full Improvements                   25.1%            0.0%
+
+====================================================================================================
+GENERATING COMPARISON PLOTS
+====================================================================================================
+✓ Saved: results/comparison/mae_comparison.png
+✓ Saved: results/comparison/training_comparison.png
+
+====================================================================================================
+COMPARISON TEST COMPLETE!
+====================================================================================================
+
+Results saved to: results/comparison/
+  - mae_comparison.png
+  - training_comparison.png
+
+✓ Full improvements model is better! Saving...
+  Saved to: trained_models/improved_pp_model.pkl
+
+  Improvement summary:
+    Spectral MAE: 0.026159 → 0.019580 (25.1% better)
+    CIELAB MAE:   0.366388 → 0.366374 (0.0% better)
+
