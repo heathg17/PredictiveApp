@@ -90,19 +90,11 @@ class FlexibleNN(nn.Module):
             nn.Linear(final_hidden // 2, 5)
         )
 
-        # Fluorescence head (1 value: ct/s)
-        self.fluorescence_head = nn.Sequential(
-            nn.Linear(final_hidden, final_hidden // 4),
-            self.activation,
-            nn.Linear(final_hidden // 4, 1)
-        )
-
     def forward(self, x):
         shared = self.shared(x)
         spectral = self.spectral_head(shared)
         cielab = self.cielab_head(shared)
-        fluorescence = self.fluorescence_head(shared)
-        return spectral, cielab, fluorescence
+        return spectral, cielab
 
     def count_parameters(self):
         return sum(p.numel() for p in self.parameters() if p.requires_grad)
