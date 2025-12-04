@@ -153,7 +153,7 @@ PredictiveApp/
 
 ## License & Credits
 
-Developed by QuantumBase for color formulation research and development.
+Developed by QuantumBase for colour formulation research and development.
 
 **Version**: 2.0.0
 **Last Updated**: December 2025
