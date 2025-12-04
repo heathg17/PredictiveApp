@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   LineChart,
   Line,
@@ -26,6 +26,20 @@ const SpectralChart: React.FC<SpectralChartProps> = ({ data, singleSimData, neur
     kmSingle: singleSimData ? (singleSimData[index]?.reflectance ?? undefined) : undefined,
     neural: neuralSimData ? (neuralSimData[index]?.reflectance ?? undefined) : undefined
   }));
+
+  // Calculate dynamic Y-axis maximum based on actual data
+  const yAxisMax = useMemo(() => {
+    const allValues: number[] = [];
+    chartData.forEach(point => {
+      if (point.measured !== undefined) allValues.push(point.measured);
+      if (point.kmSingle !== undefined) allValues.push(point.kmSingle);
+      if (point.neural !== undefined) allValues.push(point.neural);
+    });
+    if (allValues.length === 0) return 1.1; // Fallback
+    const maxVal = Math.max(...allValues, 0);
+    // Add 15% padding and round to nearest 0.1
+    return Math.ceil(maxVal * 1.15 * 10) / 10;
+  }, [chartData]);
 
   // Debug: log data so developer can inspect in browser console
   // (Remove or comment out after debugging.)
@@ -56,10 +70,10 @@ const SpectralChart: React.FC<SpectralChartProps> = ({ data, singleSimData, neur
             stroke="#94a3b8"
             label={{ value: 'Wavelength (nm)', position: 'insideBottomRight', offset: -5, fill: '#94a3b8' }}
           />
-          <YAxis 
-            domain={[0, 1.1]} 
+          <YAxis
+            domain={[0, yAxisMax]}
             stroke="#94a3b8"
-            label={{ value: 'Reflectance (0-1)', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
+            label={{ value: 'Reflectance', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
           />
           <Tooltip 
             contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f8fafc' }}

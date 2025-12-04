@@ -1,0 +1,453 @@
+Loading dataset...
+Loaded 51 formulations from ../public/Concentrations.csv
+Loaded 98 spectral measurements from ../public/Spectra.csv
+Found 31 wavelength columns
+Warning: No concentration match for BiVaO5H (tried: BiVaO5, BiVaO5)
+Warning: No concentration match for BiVaO5 (tried: BiVaO5, BiVaO5)
+✓ Created 96 samples
+  8μm samples: 48
+  12μm samples: 48
+✓ Dataset loaded: 96 samples
+
+====================================================================================================
+HYPERPARAMETER OPTIMIZATION
+====================================================================================================
+
+Search space:
+  hidden_layers: [[32], [64], [128], [64, 32], [64, 64], [128, 64], [64, 64, 32], [64, 64, 64], [128, 64, 32], [64, 128, 64], [128, 128, 64], [64, 64, 64, 32], [128, 128, 64, 32]]
+  learning_rate: [0.0001, 0.0005, 0.001, 0.002, 0.005]
+  batch_size: [8, 16, 32]
+  dropout: [0.0, 0.1, 0.2, 0.3]
+  l2_lambda: [0.0, 0.0001, 0.001, 0.01]
+  activation: ['relu', 'leaky_relu', 'elu']
+  use_batchnorm: [True, False]
+  spectral_weight: [1.0, 1.5, 2.0]
+  cielab_weight: [1.0, 0.5, 0.25]
+  use_lr_scheduler: [True, False]
+  gradient_clip: [0, 1.0, 5.0]
+  epochs: [2000]
+  patience: [100]
+
+Number of trials: 50
+Cross-validation: Single Train/Val/Test Split
+
+
+[Trial 1/50]
+  Config: [64, 64, 32] layers, lr=0.002, batch=8, dropout=0.2, activation=relu
+  Results: Spectral MAE=0.027058, CIELAB MAE=0.016109, Combined Score=0.308290
+  Training time: 4.9s, Parameters: 8612
+
+[Trial 2/50]
+  Config: [128, 128, 64] layers, lr=0.001, batch=8, dropout=0.3, activation=elu
+  Results: Spectral MAE=0.023971, CIELAB MAE=0.015665, Combined Score=0.277037
+  Training time: 2.1s, Parameters: 30884
+
+[Trial 3/50]
+  Config: [128, 64] layers, lr=0.0005, batch=8, dropout=0.0, activation=leaky_relu
+  Results: Spectral MAE=0.021079, CIELAB MAE=0.009286, Combined Score=0.232436
+  Training time: 3.3s, Parameters: 14372
+
+[Trial 4/50]
+  Config: [128, 128, 64] layers, lr=0.0005, batch=32, dropout=0.1, activation=elu
+  Results: Spectral MAE=0.017547, CIELAB MAE=0.010011, Combined Score=0.195386
+  Training time: 1.2s, Parameters: 30884
+
+[Trial 5/50]
+  Config: [128] layers, lr=0.005, batch=32, dropout=0.2, activation=relu
+  Results: Spectral MAE=0.019687, CIELAB MAE=0.010908, Combined Score=0.221025
+  Training time: 0.7s, Parameters: 19876
+
+[Trial 6/50]
+  Config: [64] layers, lr=0.0005, batch=8, dropout=0.1, activation=leaky_relu
+  Results: Spectral MAE=0.017525, CIELAB MAE=0.009017, Combined Score=0.193720
+  Training time: 3.0s, Parameters: 5732
+
+[Trial 7/50]
+  Config: [64, 64, 64] layers, lr=0.001, batch=16, dropout=0.0, activation=leaky_relu
+  Results: Spectral MAE=0.019653, CIELAB MAE=0.011192, Combined Score=0.220147
+  Training time: 2.2s, Parameters: 14052
+
+[Trial 8/50]
+  Config: [64, 128, 64] layers, lr=0.002, batch=16, dropout=0.0, activation=leaky_relu
+  Results: Spectral MAE=0.016932, CIELAB MAE=0.007859, Combined Score=0.185272
+  Training time: 0.8s, Parameters: 22308
+
+[Trial 9/50]
+  Config: [64, 64, 64] layers, lr=0.002, batch=8, dropout=0.1, activation=relu
+  Results: Spectral MAE=0.022729, CIELAB MAE=0.011288, Combined Score=0.253163
+  Training time: 2.1s, Parameters: 14052
+
+[Trial 10/50]
+  Config: [64, 64, 64] layers, lr=0.0005, batch=8, dropout=0.3, activation=relu
+  Results: Spectral MAE=0.031628, CIELAB MAE=0.022913, Combined Score=0.376709
+  Training time: 6.9s, Parameters: 14436
+
+[Trial 11/50]
+  Config: [128, 64, 32] layers, lr=0.0001, batch=8, dropout=0.3, activation=elu
+  Results: Spectral MAE=0.031873, CIELAB MAE=0.021981, Combined Score=0.377961
+  Training time: 13.6s, Parameters: 13220
+
+[Trial 12/50]
+  Config: [128] layers, lr=0.0001, batch=32, dropout=0.0, activation=elu
+  Results: Spectral MAE=0.016554, CIELAB MAE=0.010703, Combined Score=0.186192
+  Training time: 3.1s, Parameters: 19620
+
+[Trial 13/50]
+  Config: [32] layers, lr=0.005, batch=32, dropout=0.3, activation=leaky_relu
+  Results: Spectral MAE=0.023999, CIELAB MAE=0.016024, Combined Score=0.280811
+  Training time: 1.0s, Parameters: 1924
+
+[Trial 14/50]
+  Config: [128] layers, lr=0.0001, batch=8, dropout=0.1, activation=elu
+  Results: Spectral MAE=0.016689, CIELAB MAE=0.010540, Combined Score=0.187379
+  Training time: 5.2s, Parameters: 19620
+
+[Trial 15/50]
+  Config: [64, 128, 64] layers, lr=0.0005, batch=8, dropout=0.2, activation=elu
+  Results: Spectral MAE=0.025943, CIELAB MAE=0.015088, Combined Score=0.298089
+  Training time: 6.6s, Parameters: 22820
+
+[Trial 16/50]
+  Config: [64, 64, 32] layers, lr=0.005, batch=32, dropout=0.2, activation=relu
+  Results: Spectral MAE=0.022139, CIELAB MAE=0.013409, Combined Score=0.250524
+  Training time: 0.5s, Parameters: 8292
+
+[Trial 17/50]
+  Config: [64, 64, 64, 32] layers, lr=0.0005, batch=16, dropout=0.0, activation=relu
+  Results: Spectral MAE=0.022152, CIELAB MAE=0.010190, Combined Score=0.244699
+  Training time: 2.8s, Parameters: 12900
+
+[Trial 18/50]
+  Config: [64, 128, 64] layers, lr=0.002, batch=8, dropout=0.2, activation=relu
+  Results: Spectral MAE=0.021633, CIELAB MAE=0.011494, Combined Score=0.244047
+  Training time: 4.9s, Parameters: 22820
+
+[Trial 19/50]
+  Config: [64, 32] layers, lr=0.005, batch=8, dropout=0.2, activation=leaky_relu
+  Results: Spectral MAE=0.019293, CIELAB MAE=0.010902, Combined Score=0.216751
+  Training time: 1.6s, Parameters: 4132
+
+[Trial 20/50]
+  Config: [32] layers, lr=0.001, batch=16, dropout=0.3, activation=elu
+  Results: Spectral MAE=0.022829, CIELAB MAE=0.014173, Combined Score=0.261332
+  Training time: 2.2s, Parameters: 1924
+
+[Trial 21/50]
+  Config: [32] layers, lr=0.0005, batch=16, dropout=0.2, activation=elu
+  Results: Spectral MAE=0.019436, CIELAB MAE=0.010493, Combined Score=0.216472
+  Training time: 3.1s, Parameters: 1924
+
+[Trial 22/50]
+  Config: [128, 128, 64] layers, lr=0.0001, batch=16, dropout=0.1, activation=leaky_relu
+  Results: Spectral MAE=0.025544, CIELAB MAE=0.012946, Combined Score=0.288540
+  Training time: 4.1s, Parameters: 31524
+
+[Trial 23/50]
+  Config: [64] layers, lr=0.005, batch=16, dropout=0.3, activation=elu
+  Results: Spectral MAE=0.015547, CIELAB MAE=0.009973, Combined Score=0.174310
+  Training time: 1.3s, Parameters: 5732
+
+[Trial 24/50]
+  Config: [32] layers, lr=0.005, batch=16, dropout=0.1, activation=elu
+  Results: Spectral MAE=0.020818, CIELAB MAE=0.012208, Combined Score=0.233122
+  Training time: 1.3s, Parameters: 1924
+
+[Trial 25/50]
+  Config: [128, 64] layers, lr=0.005, batch=32, dropout=0.3, activation=elu
+  Results: Spectral MAE=0.022981, CIELAB MAE=0.015794, Combined Score=0.267050
+  Training time: 0.5s, Parameters: 14372
+
+[Trial 26/50]
+  Config: [128] layers, lr=0.002, batch=32, dropout=0.3, activation=relu
+  Results: Spectral MAE=0.016327, CIELAB MAE=0.008517, Combined Score=0.180476
+  Training time: 0.8s, Parameters: 19620
+
+[Trial 27/50]
+  Config: [128, 128, 64] layers, lr=0.002, batch=8, dropout=0.0, activation=elu
+  Results: Spectral MAE=0.027732, CIELAB MAE=0.017039, Combined Score=0.332437
+  Training time: 2.0s, Parameters: 31524
+
+[Trial 28/50]
+  Config: [64, 64, 64, 32] layers, lr=0.0005, batch=8, dropout=0.3, activation=relu
+  Results: Spectral MAE=0.068762, CIELAB MAE=0.037339, Combined Score=0.859405
+  Training time: 3.7s, Parameters: 12452
+
+[Trial 29/50]
+  Config: [64, 64] layers, lr=0.001, batch=32, dropout=0.0, activation=elu
+  Results: Spectral MAE=0.018061, CIELAB MAE=0.009713, Combined Score=0.200619
+  Training time: 1.6s, Parameters: 10148
+
+[Trial 30/50]
+  Config: [64, 64, 64] layers, lr=0.002, batch=32, dropout=0.0, activation=leaky_relu
+  Results: Spectral MAE=0.019567, CIELAB MAE=0.012134, Combined Score=0.220525
+  Training time: 1.0s, Parameters: 14052
+
+[Trial 31/50]
+  Config: [128, 64, 32] layers, lr=0.001, batch=8, dropout=0.0, activation=leaky_relu
+  Results: Spectral MAE=0.017796, CIELAB MAE=0.009800, Combined Score=0.196972
+  Training time: 1.6s, Parameters: 12772
+
+[Trial 32/50]
+  Config: [128, 64, 32] layers, lr=0.002, batch=8, dropout=0.3, activation=leaky_relu
+  Results: Spectral MAE=0.025509, CIELAB MAE=0.014257, Combined Score=0.289916
+  Training time: 7.2s, Parameters: 13220
+
+[Trial 33/50]
+  Config: [64, 64, 64, 32] layers, lr=0.001, batch=32, dropout=0.1, activation=leaky_relu
+  Results: Spectral MAE=0.021158, CIELAB MAE=0.012244, Combined Score=0.238265
+  Training time: 1.3s, Parameters: 12452
+
+[Trial 34/50]
+  Config: [128] layers, lr=0.001, batch=32, dropout=0.1, activation=leaky_relu
+  Results: Spectral MAE=0.018662, CIELAB MAE=0.010002, Combined Score=0.208275
+  Training time: 1.0s, Parameters: 19876
+
+[Trial 35/50]
+  Config: [128] layers, lr=0.002, batch=32, dropout=0.3, activation=relu
+  Results: Spectral MAE=0.015128, CIELAB MAE=0.008546, Combined Score=0.166986
+  Training time: 0.6s, Parameters: 19620
+
+[Trial 36/50]
+  Config: [128, 64] layers, lr=0.001, batch=8, dropout=0.0, activation=relu
+  Results: Spectral MAE=0.025231, CIELAB MAE=0.011276, Combined Score=0.282124
+  Training time: 2.4s, Parameters: 14756
+
+[Trial 37/50]
+  Config: [64, 64, 64, 32] layers, lr=0.0001, batch=32, dropout=0.0, activation=elu
+  Results: Spectral MAE=0.025261, CIELAB MAE=0.013724, Combined Score=0.286314
+  Training time: 4.3s, Parameters: 12900
+
+[Trial 38/50]
+  Config: [128, 64] layers, lr=0.0005, batch=32, dropout=0.3, activation=leaky_relu
+  Results: Spectral MAE=0.020651, CIELAB MAE=0.011737, Combined Score=0.231550
+  Training time: 1.4s, Parameters: 14372
+
+[Trial 39/50]
+  Config: [128, 128, 64] layers, lr=0.0005, batch=16, dropout=0.1, activation=relu
+  Results: Spectral MAE=0.022106, CIELAB MAE=0.014930, Combined Score=0.255413
+  Training time: 2.5s, Parameters: 31524
+
+[Trial 40/50]
+  Config: [128, 128, 64, 32] layers, lr=0.0005, batch=32, dropout=0.1, activation=leaky_relu
+  Results: Spectral MAE=0.021898, CIELAB MAE=0.012191, Combined Score=0.246682
+  Training time: 2.0s, Parameters: 29988
+
+[Trial 41/50]
+  Config: [64, 32] layers, lr=0.005, batch=8, dropout=0.3, activation=leaky_relu
+  Results: Spectral MAE=0.025680, CIELAB MAE=0.017825, Combined Score=0.298573
+  Training time: 2.4s, Parameters: 4132
+
+[Trial 42/50]
+  Config: [64, 64, 64, 32] layers, lr=0.0005, batch=16, dropout=0.3, activation=elu
+  Results: Spectral MAE=0.023483, CIELAB MAE=0.013648, Combined Score=0.267876
+  Training time: 3.8s, Parameters: 12452
+
+[Trial 43/50]
+  Config: [128, 128, 64, 32] layers, lr=0.0005, batch=16, dropout=0.1, activation=leaky_relu
+  Results: Spectral MAE=0.019479, CIELAB MAE=0.012109, Combined Score=0.219791
+  Training time: 2.5s, Parameters: 29284
+
+[Trial 44/50]
+  Config: [32] layers, lr=0.005, batch=8, dropout=0.2, activation=leaky_relu
+  Results: Spectral MAE=0.026431, CIELAB MAE=0.019052, Combined Score=0.310732
+  Training time: 1.2s, Parameters: 1924
+
+[Trial 45/50]
+  Config: [64, 64, 64] layers, lr=0.002, batch=8, dropout=0.1, activation=leaky_relu
+  Results: Spectral MAE=0.021423, CIELAB MAE=0.014462, Combined Score=0.246717
+  Training time: 1.7s, Parameters: 14052
+
+[Trial 46/50]
+  Config: [128] layers, lr=0.002, batch=16, dropout=0.2, activation=relu
+  Results: Spectral MAE=0.016925, CIELAB MAE=0.009508, Combined Score=0.188393
+  Training time: 1.4s, Parameters: 19620
+
+[Trial 47/50]
+  Config: [128, 64, 32] layers, lr=0.002, batch=8, dropout=0.0, activation=leaky_relu
+  Results: Spectral MAE=0.023440, CIELAB MAE=0.014259, Combined Score=0.272034
+  Training time: 2.3s, Parameters: 13220
+
+[Trial 48/50]
+  Config: [128, 64] layers, lr=0.0001, batch=8, dropout=0.0, activation=relu
+  Results: Spectral MAE=0.021543, CIELAB MAE=0.010830, Combined Score=0.239036
+  Training time: 5.0s, Parameters: 14756
+
+[Trial 49/50]
+  Config: [64, 64, 32] layers, lr=0.001, batch=16, dropout=0.3, activation=relu
+  Results: Spectral MAE=0.027763, CIELAB MAE=0.015330, Combined Score=0.315876
+  Training time: 1.2s, Parameters: 8292
+
+[Trial 50/50]
+  Config: [32] layers, lr=0.002, batch=8, dropout=0.3, activation=leaky_relu
+  Results: Spectral MAE=0.023992, CIELAB MAE=0.015185, Combined Score=0.273761
+  Training time: 2.3s, Parameters: 1860
+
+====================================================================================================
+TOP 10 CONFIGURATIONS
+====================================================================================================
+
+1. Combined Score: 0.166986
+   Architecture: [128]
+   Learning Rate: 0.002
+   Batch Size: 32
+   Dropout: 0.3
+   L2: 0.0
+   Activation: relu
+   BatchNorm: False
+   Spectral MAE: 0.015128
+   CIELAB MAE: 0.008546
+   Spectral R²: 0.995240
+   CIELAB R²: 0.997597
+   Parameters: 19620
+   Training Time: 0.6s
+
+2. Combined Score: 0.174310
+   Architecture: [64]
+   Learning Rate: 0.005
+   Batch Size: 16
+   Dropout: 0.3
+   L2: 0.0001
+   Activation: elu
+   BatchNorm: False
+   Spectral MAE: 0.015547
+   CIELAB MAE: 0.009973
+   Spectral R²: 0.994653
+   CIELAB R²: 0.996477
+   Parameters: 5732
+   Training Time: 1.3s
+
+3. Combined Score: 0.180476
+   Architecture: [128]
+   Learning Rate: 0.002
+   Batch Size: 32
+   Dropout: 0.3
+   L2: 0.0
+   Activation: relu
+   BatchNorm: False
+   Spectral MAE: 0.016327
+   CIELAB MAE: 0.008517
+   Spectral R²: 0.993984
+   CIELAB R²: 0.997323
+   Parameters: 19620
+   Training Time: 0.8s
+
+4. Combined Score: 0.185272
+   Architecture: [64, 128, 64]
+   Learning Rate: 0.002
+   Batch Size: 16
+   Dropout: 0.0
+   L2: 0.001
+   Activation: leaky_relu
+   BatchNorm: False
+   Spectral MAE: 0.016932
+   CIELAB MAE: 0.007859
+   Spectral R²: 0.994120
+   CIELAB R²: 0.997791
+   Parameters: 22308
+   Training Time: 0.8s
+
+5. Combined Score: 0.186192
+   Architecture: [128]
+   Learning Rate: 0.0001
+   Batch Size: 32
+   Dropout: 0.0
+   L2: 0.0001
+   Activation: elu
+   BatchNorm: False
+   Spectral MAE: 0.016554
+   CIELAB MAE: 0.010703
+   Spectral R²: 0.993636
+   CIELAB R²: 0.996418
+   Parameters: 19620
+   Training Time: 3.1s
+
+6. Combined Score: 0.187379
+   Architecture: [128]
+   Learning Rate: 0.0001
+   Batch Size: 8
+   Dropout: 0.1
+   L2: 0.001
+   Activation: elu
+   BatchNorm: False
+   Spectral MAE: 0.016689
+   CIELAB MAE: 0.010540
+   Spectral R²: 0.993481
+   CIELAB R²: 0.996566
+   Parameters: 19620
+   Training Time: 5.2s
+
+7. Combined Score: 0.188393
+   Architecture: [128]
+   Learning Rate: 0.002
+   Batch Size: 16
+   Dropout: 0.2
+   L2: 0.0001
+   Activation: relu
+   BatchNorm: False
+   Spectral MAE: 0.016925
+   CIELAB MAE: 0.009508
+   Spectral R²: 0.993430
+   CIELAB R²: 0.996940
+   Parameters: 19620
+   Training Time: 1.4s
+
+8. Combined Score: 0.193720
+   Architecture: [64]
+   Learning Rate: 0.0005
+   Batch Size: 8
+   Dropout: 0.1
+   L2: 0.0
+   Activation: leaky_relu
+   BatchNorm: False
+   Spectral MAE: 0.017525
+   CIELAB MAE: 0.009017
+   Spectral R²: 0.993590
+   CIELAB R²: 0.996954
+   Parameters: 5732
+   Training Time: 3.0s
+
+9. Combined Score: 0.195386
+   Architecture: [128, 128, 64]
+   Learning Rate: 0.0005
+   Batch Size: 32
+   Dropout: 0.1
+   L2: 0.0001
+   Activation: elu
+   BatchNorm: False
+   Spectral MAE: 0.017547
+   CIELAB MAE: 0.010011
+   Spectral R²: 0.993603
+   CIELAB R²: 0.996494
+   Parameters: 30884
+   Training Time: 1.2s
+
+10. Combined Score: 0.196972
+   Architecture: [128, 64, 32]
+   Learning Rate: 0.001
+   Batch Size: 8
+   Dropout: 0.0
+   L2: 0.0001
+   Activation: leaky_relu
+   BatchNorm: False
+   Spectral MAE: 0.017796
+   CIELAB MAE: 0.009800
+   Spectral R²: 0.993909
+   CIELAB R²: 0.996877
+   Parameters: 12772
+   Training Time: 1.6s
+Traceback (most recent call last):
+  File "/Users/GoergeH/Documents/github/PredictiveApp/python_version/optimize_hyperparameters.py", line 486, in <module>
+    json.dump({
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/__init__.py", line 179, in dump
+    for chunk in iterable:
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.py", line 431, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.py", line 405, in _iterencode_dict
+    yield from chunks
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.py", line 405, in _iterencode_dict
+    yield from chunks
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.py", line 438, in _iterencode
+    o = _default(o)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type int64 is not JSON serializable

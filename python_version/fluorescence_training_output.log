@@ -1,0 +1,73 @@
+================================================================================
+FLUORESCENCE NN PREDICTOR - CONSTRAINT TESTING
+================================================================================
+Loading fluorescence NN from trained_models/option1_fluorescence_nn.pkl...
+✓ Fluorescence NN loaded (R²=0.9734, MAE=327.9 ct/s)
+
+--------------------------------------------------------------------------------
+SMOOTH GXT CONSTRAINT FUNCTION
+--------------------------------------------------------------------------------
+GXT %      Multiplier      Effect                        
+--------------------------------------------------------------------------------
+0.0        0.000           Zero fluorescence             
+0.5        0.245           Strongly reduced              
+1.0        0.462           Strongly reduced              
+2.0        0.762           Moderately reduced            
+3.0        0.905           Minimal constraint effect     
+5.0        0.987           Minimal constraint effect     
+10.0       1.000           Minimal constraint effect     
+15.0       1.000           Minimal constraint effect     
+20.0       1.000           Minimal constraint effect     
+
+✓ Smooth S-curve transition from 0% to 5% GXT
+
+--------------------------------------------------------------------------------
+TEST: ZERO GXT CONSTRAINT (0% GXT → 0 ct/s)
+--------------------------------------------------------------------------------
+Formulation                                             Prediction
+--------------------------------------------------------------------------------
+GXT:0% BiVaO4:0% PG:0% PearlB:0%                            0.0 ct/s
+GXT:0% BiVaO4:10% PG:0% PearlB:0%                           0.0 ct/s
+GXT:0% BiVaO4:0% PG:2% PearlB:0%                            0.0 ct/s
+GXT:0% BiVaO4:0% PG:0% PearlB:5%                            0.0 ct/s
+
+✓ All predictions should be 0 ct/s
+
+--------------------------------------------------------------------------------
+TEST: PURE GXT SAMPLES (smooth transition)
+--------------------------------------------------------------------------------
+Formulation                                          Multiplier      Prediction
+--------------------------------------------------------------------------------
+GXT:0.5% @ 8μm                                            0.245          190 ct/s
+GXT:1.0% @ 8μm                                            0.462          419 ct/s
+GXT:2.0% @ 8μm                                            0.762          886 ct/s
+GXT:5.0% @ 8μm                                            0.987         1874 ct/s
+GXT:10.0% @ 8μm                                           1.000         3206 ct/s
+GXT:15.0% @ 8μm                                           1.000         4319 ct/s
+GXT:20.0% @ 8μm                                           1.000         5360 ct/s
+
+✓ Smooth monotonic increase from 0% to higher concentrations
+
+--------------------------------------------------------------------------------
+TEST: PIGMENT INTERACTIONS
+--------------------------------------------------------------------------------
+Formulation                                             Prediction     vs Baseline
+--------------------------------------------------------------------------------
+10% GXT (baseline)                                         3206 ct/s
++ 5% BiVaO4 + 0% PG + 0% PearlB                            2346 ct/s         -860 ct/s
++ 10% BiVaO4 + 0% PG + 0% PearlB                           2181 ct/s        -1025 ct/s
++ 0% BiVaO4 + 2% PG + 0% PearlB                            3754 ct/s          549 ct/s
++ 0% BiVaO4 + 0% PG + 5% PearlB                            3474 ct/s          269 ct/s
+
+✓ Model captures complex pigment interactions
+
+================================================================================
+CONSTRAINT TESTING COMPLETE
+================================================================================
+
+Smooth constraint function ensures:
+  • 0% GXT → 0 ct/s (exact)
+  • Smooth S-curve transition (no sharp steps)
+  • Minimal effect on typical concentrations (≥5% GXT)
+  • Physics-based constraint without breaking predictions
+================================================================================

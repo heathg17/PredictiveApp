@@ -77,13 +77,15 @@ def load_new_dataset(
         # 2. "PG_0.5" in spectra -> "PG0.5" in concentrations
         # 3. "OPTI6" in spectra -> "OPTI 6" in concentrations
         # 4. "T22" matches directly
+        # 5. "52C" in spectra -> "F052C" in concentrations
+        # 6. "F052F H" in spectra -> "F052FH" in concentrations (remove space before H)
 
-        normalized_base = base_name.replace('_', '')  # Remove underscores
+        normalized_base = base_name.replace('_', '').replace(' ', '')  # Remove underscores and spaces
 
         # Try exact match first
         conc_match = conc_df[conc_df['Sample ID'] == base_name]
 
-        # Try without underscores
+        # Try without underscores/spaces
         if conc_match.empty:
             conc_match = conc_df[conc_df['Sample ID'] == normalized_base]
 
@@ -93,6 +95,11 @@ def load_new_dataset(
             opti_num = normalized_base.replace('OPTI', '')
             with_space = f"OPTI {opti_num}"
             conc_match = conc_df[conc_df['Sample ID'] == with_space]
+
+        # Try adding F0 prefix for F052 samples (52C -> F052C)
+        if conc_match.empty and normalized_base.startswith('52'):
+            with_prefix = f"F0{normalized_base}"
+            conc_match = conc_df[conc_df['Sample ID'] == with_prefix]
 
         if conc_match.empty:
             print(f"Warning: No concentration match for {sample_name} (tried: {base_name}, {normalized_base})")

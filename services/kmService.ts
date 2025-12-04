@@ -1,7 +1,7 @@
 import { SampleData, ModelCoefficients, ModelType } from '../types';
 import { pseudoInverse, multiply } from '../utils/matrix';
 import { WAVELENGTHS, Rg_DEFAULT } from '../constants';
-import { trainNeuralNetwork, predictNeuralNetwork } from '../utils/neuralNet';
+// TypeScript neural network removed - now using PyTorch API via services/pytorchApi.ts
 
 // --- Fluorescence Detection ---
 
@@ -314,39 +314,10 @@ const trainNeuralNetModel = (
 
   const Y: number[][] = samples.map(s => s.spectrum);
 
-  // Train neural network with improved hyperparameters
-  const {
-    weights1,
-    bias1,
-    weights2,
-    bias2,
-    inputMean,
-    inputStd,
-    outputMean,
-    outputStd
-  } = trainNeuralNetwork(
-    X,
-    Y,
-    128,  // Hidden layer size (increased for better capacity)
-    0.005, // Learning rate (reduced for stability)
-    2000, // Epochs (increased for convergence)
-    Math.min(8, Math.max(4, Math.floor(samples.length / 5))), // Batch size
-    0.005 // L2 regularization (prevents overfitting)
-  );
-
+  // TypeScript neural network training removed - using PyTorch API instead
+  // Neural network predictions now handled by Python backend (see services/pytorchApi.ts)
   return {
     type: 'neural-net',
-    neuralNet: {
-      reagents,
-      weights1,
-      bias1,
-      weights2,
-      bias2,
-      inputMean,
-      inputStd,
-      outputMean,
-      outputStd
-    },
     wavelengths: WAVELENGTHS
   };
 };
@@ -358,25 +329,11 @@ export const predictReflectance = (
 ): number[] => {
   const { type, wavelengths } = model;
 
-  if (type === 'neural-net' && model.neuralNet) {
-    // Neural network prediction
-    const { reagents, weights1, bias1, weights2, bias2, inputMean, inputStd, outputMean, outputStd } = model.neuralNet;
-
-    // Prepare input: [conc1, conc2, ..., thickness]
-    const input = reagents.map(r => (concentrations[r] || 0) / 100.0);
-    input.push(thickness);
-
-    return predictNeuralNetwork(
-      input,
-      weights1,
-      bias1,
-      weights2,
-      bias2,
-      inputMean,
-      inputStd,
-      outputMean,
-      outputStd
-    );
+  if (type === 'neural-net') {
+    // Neural network prediction now handled by PyTorch API
+    // This case should not be reached - predictions go directly to the API
+    // Return empty array as placeholder
+    return new Array(wavelengths.length).fill(0);
   }
 
   // K-M based predictions

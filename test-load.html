@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test CSV Loading</title>
+</head>
+<body>
+    <h1>CSV Loading Test</h1>
+    <div id="output"></div>
+
+    <script>
+        async function testLoad() {
+            const output = document.getElementById('output');
+
+            try {
+                // Test Concentrations.csv
+                const concResp = await fetch('/Concentrations.csv');
+                const concText = await concResp.text();
+                const concLines = concText.split(/\r?\n/).filter(line => line.trim().length > 0);
+
+                output.innerHTML += `<h2>Concentrations.csv</h2>`;
+                output.innerHTML += `<p>Total lines: ${concLines.length}</p>`;
+                output.innerHTML += `<p>Header: ${concLines[0]}</p>`;
+                output.innerHTML += `<p>First data row: ${concLines[1]}</p>`;
+
+                // Test Spectra.csv
+                const specResp = await fetch('/Spectra.csv');
+                const specText = await specResp.text();
+                const specLines = specText.split(/\r?\n/).filter(line => line.trim().length > 0);
+
+                output.innerHTML += `<h2>Spectra.csv</h2>`;
+                output.innerHTML += `<p>Total lines: ${specLines.length}</p>`;
+                output.innerHTML += `<p>Line 0: ${specLines[0].substring(0, 50)}...</p>`;
+                output.innerHTML += `<p>Line 1: ${specLines[1].substring(0, 50)}...</p>`;
+                output.innerHTML += `<p>Line 2: ${specLines[2].substring(0, 50)}...</p>`;
+                output.innerHTML += `<p>Line 3 (header): ${specLines[3].substring(0, 100)}...</p>`;
+                output.innerHTML += `<p>Line 4 (first data): ${specLines[4].substring(0, 100)}...</p>`;
+
+                // Check header parsing
+                const header = specLines[3].split(';').map(h => h.trim());
+                const nameIndex = header.findIndex(h => h === 'User Color Name');
+                output.innerHTML += `<p>User Color Name column index: ${nameIndex}</p>`;
+
+                // Parse first data row
+                const values = specLines[4].split(';').map(v => v.trim());
+                const sampleName = values[nameIndex];
+                output.innerHTML += `<p>First sample name: ${sampleName}</p>`;
+
+            } catch (error) {
+                output.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+
+        testLoad();
+    </script>
+</body>
+</html>

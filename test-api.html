@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>PyTorch API Test</h1>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing API connection...<br>';
+
+            try {
+                // Test 1: Basic fetch
+                const response = await fetch('http://localhost:8001/', {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(2000)
+                });
+
+                resultDiv.innerHTML += `✓ API responded with status: ${response.status}<br>`;
+
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML += `✓ API data: ${JSON.stringify(data)}<br>`;
+                } else {
+                    resultDiv.innerHTML += `✗ API returned error<br>`;
+                }
+
+                // Test 2: Status endpoint
+                const statusResponse = await fetch('http://localhost:8001/api/status');
+                if (statusResponse.ok) {
+                    const statusData = await statusResponse.json();
+                    resultDiv.innerHTML += `✓ Status endpoint: ${JSON.stringify(statusData)}<br>`;
+                }
+
+            } catch (error) {
+                resultDiv.innerHTML += `✗ Error: ${error.message}<br>`;
+                console.error('API test failed:', error);
+            }
+        }
+
+        testAPI();
+    </script>
+</body>
+</html>

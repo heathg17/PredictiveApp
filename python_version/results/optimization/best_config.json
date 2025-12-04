@@ -1,9 +1,7 @@
 {
   "config": {
     "hidden_layers": [
-      64,
-      128,
-      64
+      128
     ],
     "learning_rate": 0.002,
     "batch_size": 
