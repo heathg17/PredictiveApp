@@ -1,13 +1,13 @@
 # Anette - Formulation Assistant
 
-**Anette** is an intelligent color prediction system that helps you create precise color formulations for polypropylene (PP) substrates. Using advanced neural networks trained on 96 real-world samples, Anette predicts spectral reflectance, CIELAB color coordinates, and fluorescence intensity for any combination of pigments.
+**Anette** is an intelligent colour prediction system that helps you create precise colour formulations for polypropylene (PP) substrates. Using advanced neural networks trained on 96 real-world samples, Anette predicts spectral reflectance, CIELAB colour coordinates, and fluorescence intensity for any combination of pigments.
 
 ## What Can Anette Do?
 
 ### 1. **Forward Prediction**
 Enter pigment concentrations and get instant predictions for:
 - **Spectral Reflectance** (400-700nm) - See the complete reflectance curve
-- **CIELAB Color** (L*, a*, b*, c*, h°) - Industry-standard color coordinates
+- **CIELAB colour** (L*, a*, b*, c*, h°) - Industry-standard colour coordinates
 - **Fluorescence** (ct/s) - Predicted fluorescence intensity
 
 ### 2. **Inverse Prediction**
@@ -50,12 +50,12 @@ Anette works with four pigments on PP substrates:
 ### Spectral Reflectance Chart
 Shows how your formulation reflects light across the visible spectrum (400-700nm). Higher values mean more light is reflected.
 
-### CIELAB Color Values
+### CIELAB colour Values
 - **L*** (Lightness): 0 (black) to 100 (white)
 - **a***: Green (-) to Red (+)
 - **b***: Blue (-) to Yellow (+)
-- **c***: Chroma (color intensity)
-- **h°**: Hue angle (color direction, 0-360°)
+- **c***: Chroma (colour intensity)
+- **h°**: Hue angle (colour direction, 0-360°)
 
 ### Fluorescence
 Predicted fluorescence intensity in counts per second (ct/s). Higher values indicate stronger fluorescence under UV light.
