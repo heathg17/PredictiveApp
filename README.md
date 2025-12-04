@@ -1,276 +1,159 @@
-# OptiMix - Spectral Formulation Engine
+# Anette - AI-Powered Color Formulation Assistant
 
-A predictive modeling application for spectral reflectance in pigment formulations, comparing physics-based Kubelka-Munk theory with machine learning approaches.
+**Anette** is an intelligent color prediction system that helps you create precise color formulations for polypropylene (PP) substrates. Using advanced neural networks trained on 96 real-world samples, Anette predicts spectral reflectance, CIELAB color coordinates, and fluorescence intensity for any combination of pigments.
 
-## Overview
+## What Can Anette Do?
 
-OptiMix is a web-based tool that predicts the spectral reflectance curves of pigment mixtures using two complementary modeling approaches:
+### 1. **Forward Prediction**
+Enter pigment concentrations and get instant predictions for:
+- **Spectral Reflectance** (400-700nm) - See the complete reflectance curve
+- **CIELAB Color** (L*, a*, b*, c*, h°) - Industry-standard color coordinates
+- **Fluorescence** (ct/s) - Predicted fluorescence intensity
 
-1. **Kubelka-Munk (K-M) Single Layer Model** - A physics-based approach grounded in light scattering theory
-2. **Neural Network Model** - A data-driven approach that learns non-linear relationships from training data
+### 2. **Inverse Prediction**
+Paste a target spectrum (from NIX Spectro or other tools) and Anette will find the optimal pigment formulation to match it.
 
-The application enables users to:
-- Simulate spectral reflectance for custom pigment formulations
-- Compare predictions from both modeling approaches in real-time
-- Visualize spectral curves across the 400-700nm visible range
-- Load and analyze sample libraries from CSV data
+## Quick Start
 
-## How It Works
+### Step 1: Start the Backend
+```bash
+cd python_version
+python3 enhanced_api_server_v2.py
+```
+The API server will start on `http://localhost:8001`
 
-### Data Flow
+### Step 2: Start the Frontend
+```bash
+npm install  # First time only
+npm run dev
+```
+The web interface will open on `http://localhost:5173`
+
+### Step 3: Make Predictions!
+1. **Adjust pigment concentrations** using sliders or manual input
+2. **Select film thickness** (8μm or 12μm)
+3. **View predictions instantly** - spectral curve, CIELAB values, and fluorescence
+
+## Available Pigments
+
+Anette works with four pigments on PP substrates:
+
+| Pigment | Description | Typical Range |
+|---------|-------------|---------------|
+| **GXT-10** | Yellow fluorescent | 0-25% |
+| **BiVaO4** | Yellow vanadate | 0-20% |
+| **PG** | Pigment Green | 0-2% |
+| **PearlB** | Pearl Blue | 0-15% |
+
+## Understanding the Results
+
+### Spectral Reflectance Chart
+Shows how your formulation reflects light across the visible spectrum (400-700nm). Higher values mean more light is reflected.
+
+### CIELAB Color Values
+- **L*** (Lightness): 0 (black) to 100 (white)
+- **a***: Green (-) to Red (+)
+- **b***: Blue (-) to Yellow (+)
+- **c***: Chroma (color intensity)
+- **h°**: Hue angle (color direction, 0-360°)
+
+### Fluorescence
+Predicted fluorescence intensity in counts per second (ct/s). Higher values indicate stronger fluorescence under UV light.
+
+## Model Performance
+
+Anette's predictions are based on neural networks trained on 96 laboratory measurements:
+
+- **Spectral Accuracy**: R² = 0.9952 (MAE = 0.015)
+- **CIELAB Accuracy**: ΔE*ab < 2.5 (industry-excellent)
+- **Fluorescence Accuracy**: R² = 0.9734 (MAE = 328 ct/s)
+
+## Tips for Best Results
+
+1. **Stay within training ranges** - Anette is most accurate for concentrations within the ranges shown
+2. **Use 8μm for standard applications** - Most training data uses 8μm thickness
+3. **Physics-based constraints** - 0% GXT always produces 0 fluorescence (as expected)
+4. **Smooth predictions** - Fluorescence uses physics-based constraints for realistic behavior
+
+## System Requirements
+
+- **Python 3.9+** with PyTorch, FastAPI, NumPy, Pandas
+- **Node.js 16+** with React, Vite, Recharts
+- **Modern web browser** (Chrome, Firefox, Safari, Edge)
+
+## Technical Architecture
 
 ```
-Master CSV Data → Training → Model Coefficients → Real-time Prediction → Visualization
+┌─────────────────┐
+│  React Frontend │  Interactive UI with real-time predictions
+│  (Port 5173)    │
+└────────┬────────┘
+         │
+         │ HTTP REST API
+         │
+┌────────▼────────┐
+│  FastAPI Server │  Prediction engine and model serving
+│  (Port 8001)    │
+└────────┬────────┘
+         │
+         │ PyTorch Models
+         │
+┌────────▼────────┐
+│ Neural Networks │  • Spectral NN (R²=0.9952)
+│                 │  • Fluorescence NN (R²=0.9734)
+│                 │  • Deterministic CIELAB Calculator
+└─────────────────┘
 ```
-
-### 1. Data Loading
-
-On startup, the application loads spectral data from two master CSV files located in `public/`:
-
-- **Master conc.csv** - Contains sample metadata and pigment concentrations
-- **Master spec - master_sample_library.csv** - Contains measured spectral reflectance curves (400-700nm, 10nm intervals)
-
-The data loader ([utils/loadMasterData.ts](utils/loadMasterData.ts)) merges these datasets by sample ID.
-
-### 2. Model Training
-
-#### Kubelka-Munk Model
-
-The K-M model ([services/kmService.ts](services/kmService.ts)) converts measured reflectance values to K/S ratios using:
-
-```
-K/S = (1 - R)² / (2R)
-```
-
-Where:
-- `K` = absorption coefficient
-- `S` = scattering coefficient
-- `R` = reflectance
-
-For each wavelength, the model solves a linear system using matrix pseudoinverse to find K/S coefficients for each pigment. The model assumes:
-- K/S values are additive (Beer-Lambert-like behavior)
-- Linear concentration-to-K/S relationship
-
-**Strengths:**
-- Physically interpretable
-- Works well for opaque, non-fluorescent samples
-- Requires minimal training data
-
-**Limitations:**
-- Assumes linearity (fails for fluorescent pigments)
-- Cannot capture pigment interactions
-- Poor extrapolation outside training range
-
-#### Neural Network Model
-
-The neural network ([utils/neuralNet.ts](utils/neuralNet.ts)) uses a feedforward architecture:
-
-```
-Input Layer (N pigments + thickness) → Hidden Layer (128 neurons, ReLU) → Output Layer (31 wavelengths)
-```
-
-Training process:
-- **Input:** Pigment concentrations + substrate thickness
-- **Output:** 31 reflectance values (400-700nm)
-- **Architecture:** 1 hidden layer with 128 neurons
-- **Activation:** ReLU (hidden), Linear (output)
-- **Optimization:** Stochastic Gradient Descent with mini-batches
-- **Regularization:** L2 weight decay (λ=0.005)
-- **Training:** 2000 epochs, learning rate 0.005
-
-The network learns to map formulation parameters directly to spectral curves, capturing:
-- Non-linear concentration effects
-- Fluorescence peaks (R > 1.0)
-- Pigment interaction effects
-- Substrate-specific behavior
-
-**Strengths:**
-- Captures fluorescence and non-linear effects
-- Learns from data patterns
-- Handles complex mixtures
-
-**Limitations:**
-- Requires substantial training data
-- Black-box (not physically interpretable)
-- May overfit with insufficient data
-
-### 3. Prediction
-
-Both models predict reflectance for user-specified formulations:
-
-**K-M Approach:**
-```typescript
-KS_mix(λ) = Σ [concentration_i × alpha_i(λ)]
-R(λ) = 1 + KS - √(KS² + 2KS)
-```
-
-**Neural Network Approach:**
-```typescript
-R = NN([c1, c2, ..., cn, thickness])
-```
-
-Predictions update in real-time as users adjust concentration sliders.
-
-### 4. Visualization
-
-The spectral chart ([components/SpectralChart.tsx](components/SpectralChart.tsx)) displays three overlaid curves:
-
-- **Blue line** - Reference spectrum (selected sample)
-- **Cyan line** - K-M model prediction
-- **Purple line** - Neural network prediction
 
 ## Project Structure
 
 ```
 PredictiveApp/
-├── App.tsx                    # Main application component, state management
-├── index.tsx                  # React app entry point
-├── types.ts                   # TypeScript type definitions
-├── constants.ts               # Wavelengths, reagent lists, initial data
-│
-├── components/
-│   └── SpectralChart.tsx      # Recharts visualization component
-│
-├── services/
-│   └── kmService.ts           # K-M model training & prediction
-│
-├── utils/
-│   ├── csvParser.ts           # CSV file parsing utilities
-│   ├── loadMasterData.ts      # Master data loading logic
-│   ├── matrix.ts              # Linear algebra (pseudoinverse)
-│   └── neuralNet.ts           # Neural network implementation
-│
-├── public/
-│   ├── Master conc.csv        # Sample concentrations
-│   └── Master spec - ...csv   # Spectral measurements
-│
-├── DATA_COLLECTION_GUIDE.md   # Guidance for improving model accuracy
-└── package.json               # Dependencies & scripts
+├── components/          # React UI components
+├── services/            # API communication layer
+├── python_version/      # Backend neural network system
+│   ├── trained_models/  # Pre-trained PyTorch models
+│   ├── utils/          # Data loading and processing
+│   └── enhanced_api_server_v2.py  # Main API server
+├── public/             # Training data (CSV files)
+└── README.md           # This file
 ```
 
-## Getting Started
+## Troubleshooting
 
-### Prerequisites
+### Backend won't start
+- Check Python version: `python3 --version` (need 3.9+)
+- Install dependencies: `pip3 install torch fastapi uvicorn numpy pandas scikit-learn`
 
-- Node.js (v18 or later)
-- npm or yarn
+### Frontend won't start
+- Check Node.js version: `node --version` (need 16+)
+- Clear node_modules: `rm -rf node_modules && npm install`
 
-### Installation
+### Predictions seem incorrect
+- Verify API server is running on port 8001
+- Check browser console for errors (F12 → Console tab)
+- Ensure concentrations are within trained ranges
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd PredictiveApp
-```
+## About the Neural Networks
 
-2. Install dependencies:
-```bash
-npm install
-```
+### Spectral Reflectance Model
+- **Architecture**: 5 inputs → [128] hidden layer → 31 spectral outputs
+- **Training**: 96 samples with hyperparameter optimization
+- **Performance**: R²=0.9952, MAE=0.015
 
-3. Start the development server:
-```bash
-npm run dev
-```
+### CIELAB Calculator
+- **Method**: Deterministic CIE 1964 10° observer with D65 illuminant
+- **Accuracy**: ΔE*ab < 2.5 on validation set
+- **White Point**: Corrected (X=93.253, Y=100, Z=94.247)
 
-4. Open your browser to `http://localhost:5173`
+### Fluorescence Model
+- **Architecture**: 6 inputs → [64, 32] hidden layers → 1 fluorescence output
+- **Constraint**: Physics-based smooth S-curve (0% GXT → 0 ct/s)
+- **Performance**: R²=0.9734, MAE=328 ct/s
 
-### Building for Production
+## License & Credits
 
-```bash
-npm run build
-```
+Developed by QuantumBase for color formulation research and development.
 
-The optimized build will be created in the `dist/` folder.
-
-## Using the Application
-
-### Loading a Reference Sample
-
-1. Use the "Load Reference" dropdown in the sidebar to select a sample
-2. The spectral chart updates to show the measured curve
-3. Concentration sliders automatically populate with that sample's formulation
-
-### Creating Custom Formulations
-
-1. Adjust the concentration sliders for each pigment (0-30%)
-2. Monitor the "Total" percentage (should not exceed 100%)
-3. Watch the predictions update in real-time
-4. Compare K-M (cyan) vs Neural Network (purple) predictions
-
-### Comparing Models
-
-- **Smooth curves** - Both models agree (high confidence region)
-- **Diverging predictions** - Models disagree (check training data coverage)
-- **Purple peaks > 1.0** - Neural network detected fluorescence (K-M cannot model this)
-
-## Data Format
-
-### Concentration CSV Format
-
-```csv
-Sample,BiVaO4,PG,PB,LY,GXT,SY43,TiO2,SFXC G,...
-Sample_001,10.5,5.2,0,0,0,0,0,15.3,...
-```
-
-### Spectral CSV Format
-
-```csv
-Sample,400,410,420,...,700
-Sample_001,0.452,0.478,0.501,...,0.823
-```
-
-See [DATA_COLLECTION_GUIDE.md](DATA_COLLECTION_GUIDE.md) for recommendations on collecting training data.
-
-## Improving Model Accuracy
-
-Model accuracy depends heavily on training data quality and coverage:
-
-### Data Collection Strategies
-
-1. **Dilution Series** - Measure each pigment in intervals or sensible range for formulations used in lab
-2. **Binary Mixtures** - Test interactions between pigment pairs
-3. **High-Concentration Fluorophores** - Capture extreme or self-quenching behavior
-
-## Technology Stack
-
-- **React** - UI framework
-- **TypeScript** - Type safety and developer experience
-- **Vite** - Build tool and dev server
-- **Recharts** - Data visualization library
-- **Tailwind CSS** - Styling framework
-
-## Key Algorithms
-
-### Matrix Pseudoinverse
-
-Used in K-M model to solve overdetermined linear systems:
-
-```typescript
-// Solve: Y = X × α
-// α = (X^T × X)^-1 × X^T × Y
-alpha = pseudoInverse(X) × Y
-```
-
-Implementation: [utils/matrix.ts](utils/matrix.ts)
-
-### Backpropagation
-
-Used to train neural network:
-
-```typescript
-1. Forward pass: compute predictions
-2. Calculate loss: MSE(predicted, actual)
-3. Backward pass: compute gradients
-4. Update weights: w -= learningRate × gradient
-```
-
-Implementation: [utils/neuralNet.ts](utils/neuralNet.ts)
-
-
-
-## References
-
-- Kubelka, P., & Munk, F. (1931). "An article on optics of paint layers"
-- Goodfellow, I., et al. (2016). "Deep Learning" - Neural network theory
-- Sharma, G., et al. (2017). "Digital Color Imaging Handbook" - Color science fundamentals
+**Version**: 2.0.0
+**Last Updated**: December 2025

@@ -1,6 +1,7 @@
 {
-  "name": "predictiveapp",
-  "version": "0.1.0",
+  "name": "anette",
+  "version": "2.0.0",
+  "description": "AI-Powered Color Formulation Assistant for PP Substrates",
   "private": true,
   "scripts": {
     "dev": "vite",
