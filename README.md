@@ -1,4 +1,4 @@
-# Anette - AI-Powered Color Formulation Assistant
+# Anette - Formulation Assistant
 
 **Anette** is an intelligent color prediction system that helps you create precise color formulations for polypropylene (PP) substrates. Using advanced neural networks trained on 96 real-world samples, Anette predicts spectral reflectance, CIELAB color coordinates, and fluorescence intensity for any combination of pigments.
 
